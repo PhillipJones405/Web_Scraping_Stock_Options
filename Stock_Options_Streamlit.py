@@ -227,5 +227,5 @@ worksheet = workbook.add_worksheet()
 # # Notify the reader that the data was successfully loaded.
 # data_load_state.text("Done!")
 
-# st.subheader('Stock Options Expiring: ', next_friday1)
-# st.write(options_list)
+st.subheader('Stock Options Expiring: ', next_friday1)
+st.write(options_list)
