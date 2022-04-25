@@ -209,22 +209,25 @@ fin_time = datetime.datetime.now()
 # Notify the reader that the data was successfully loaded.
 data_load_state.text("Done!")
 
-output = BytesIO()
-workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-worksheet = workbook.add_worksheet()
-
-
-# worksheet.write(A1, options_list)
-# workbook.close()
-
-# st.download_button(
-#     label="Download Excel workbook",
-#     data=output.getvalue(),
-#     file_name="workbook.xlsx",
-#     mime="application/vnd.ms-excel"
-# )
-
-
 
 st.subheader('Stock Options Expiring: ', next_friday1)
 st.write(options_list)
+
+buffer = io.BytesIO()
+
+# Create some Pandas dataframes from some data.
+
+# Create a Pandas Excel writer using XlsxWriter as the engine.
+with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+    # Write each dataframe to a different worksheet.
+    options_list.to_excel(writer, sheet_name='Sheet1')
+
+    # Close the Pandas Excel writer and output the Excel file to the buffer
+    writer.save()
+
+    st.download_button(
+        label="Download Excel worksheets",
+        data=buffer,
+        file_name="pandas_multiple.xlsx",
+        mime="application/vnd.ms-excel"
+    )
