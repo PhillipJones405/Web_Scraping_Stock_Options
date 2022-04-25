@@ -203,8 +203,7 @@ print("out")
 print(options_list)
 print(path)
 save_name = "options_list_expiring_" + next_friday1 + ".xlsx"
-options_list.to_excel(save_name)
-fin_time = datetime.datetime.now()
+
 
 # Notify the reader that the data was successfully loaded.
 data_load_state.text("Done!")
@@ -215,8 +214,6 @@ st.write(options_list)
 
 buffer = io.BytesIO()
 
-# Create some Pandas dataframes from some data.
-
 # Create a Pandas Excel writer using XlsxWriter as the engine.
 with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
     # Write each dataframe to a different worksheet.
@@ -226,8 +223,8 @@ with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
     writer.save()
 
     st.download_button(
-        label="Download Excel worksheets",
+        label="Download Excel File",
         data=buffer,
-        file_name="pandas_multiple.xlsx",
+        file_name=save_name,
         mime="application/vnd.ms-excel"
     )
