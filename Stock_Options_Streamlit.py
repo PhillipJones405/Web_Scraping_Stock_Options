@@ -177,7 +177,7 @@ stonks = ["TSLA","AAPL","NFLX"]
 all_calls_puts = []
 print("Exp Date: ", next_friday)
 
-for i in stonks:
+for i in stock_list:
     all = options_chain(i)
     #expirationDate = all['expirationDate'][0]
     expirationDate = all['expirationDate'][0]
