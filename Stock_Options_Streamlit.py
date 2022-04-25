@@ -206,9 +206,13 @@ save_name = "options_list_expiring_" + next_friday1 + ".xlsx"
 options_list.to_excel(save_name)
 fin_time = datetime.datetime.now()
 
+# Notify the reader that the data was successfully loaded.
+data_load_state.text("Done!")
+
 output = BytesIO()
 workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 worksheet = workbook.add_worksheet()
+
 
 # worksheet.write(A1, options_list)
 # workbook.close()
@@ -220,8 +224,7 @@ worksheet = workbook.add_worksheet()
 #     mime="application/vnd.ms-excel"
 # )
 
-# # Notify the reader that the data was successfully loaded.
-# data_load_state.text("Done!")
+
 
 st.subheader('Stock Options Expiring: ', next_friday1)
 st.write(options_list)
