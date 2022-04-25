@@ -81,13 +81,10 @@ stock_list = [
 "CODX",
 "APT",
 "INO",
-
 "EDIT",
 "PENN",
-
 "NKLA",
 "STNE",
-
 "YETI",
 "SAGE",
 "DOW",
@@ -98,9 +95,7 @@ stock_list = [
 "ACAD",
 "PTON",
 "AMAT",
-
 "LYB",
-
 "CSX",
 "SBUX",
 "FSLY",
@@ -141,7 +136,6 @@ stock_list = [
 "ROKU",
 "HON",
 "MMM",
-
 "BA",
 "CMI",
 "V",
@@ -174,6 +168,8 @@ stock_list = [
 "ECL",
 "SHW"]
 
+stonks = ["TSLA","AAPL","NFLX"]
+
 # for loop gets the ticker in the stock list and passes it to the options_chain() function.
 # the first expiration date will be the next friday, so the list is then filtered to only weeklys.
 # puts and calls are seprated, if the ticker's option has less than 7 strikes back, the last strike is displayed
@@ -181,7 +177,7 @@ stock_list = [
 all_calls_puts = []
 print("Exp Date: ", next_friday)
 
-for i in stock_list:
+for i in stonks:
     all = options_chain(i)
     #expirationDate = all['expirationDate'][0]
     expirationDate = all['expirationDate'][0]
