@@ -2,6 +2,7 @@
 #Python script to webscrape and filter stock options.  We want to see the calls and puts 7 strikes back on a variety of tickers.
 #we will pass in a list of stocks, functions scrape the data, compile it into a table, and filter out what we want to see.
 
+import streamlit as st
 import pandas as pd
 import numpy as np
 import yfinance as yf
