@@ -11,6 +11,10 @@ import datetime
 import dateutil.relativedelta as REL
 import os
 
+# Create a text element and let the reader know the data is loading.
+data_load_state = st.text('Loading data...')
+# Notify the reader that the data was successfully loaded.
+data_load_state.text("Done!")
 
 today = datetime.date.today()
 start_time = datetime.datetime.now()
@@ -205,10 +209,7 @@ save_name = "options_list_expiring_" + next_friday1 + ".xlsx"
 options_list.to_excel(save_name)
 fin_time = datetime.datetime.now()
 
-# Create a text element and let the reader know the data is loading.
-data_load_state = st.text('Loading data...')
-# Notify the reader that the data was successfully loaded.
-data_load_state.text("Done! (using st.cache)")
+
 
 st.subheader('Stock Options Expiring: ', next_friday1)
 st.write(options_list)
