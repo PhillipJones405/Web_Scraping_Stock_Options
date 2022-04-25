@@ -10,6 +10,8 @@ from pandas import DataFrame
 import datetime
 import dateutil.relativedelta as REL
 import os
+import xlsxwriter
+from io import BytesIO
 
 # Create a text element and let the reader know the data is loading.
 data_load_state = st.text('Loading data...')
@@ -207,6 +209,20 @@ print(path)
 save_name = "options_list_expiring_" + next_friday1 + ".xlsx"
 options_list.to_excel(save_name)
 fin_time = datetime.datetime.now()
+
+output = BytesIO()
+workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+worksheet = workbook.add_worksheet()
+
+worksheet.write(A1, options_list)
+workbook.close()
+
+st.download_button(
+    label="Download Excel workbook",
+    data=output.getvalue(),
+    file_name="workbook.xlsx",
+    mime="application/vnd.ms-excel"
+)
 
 # Notify the reader that the data was successfully loaded.
 data_load_state.text("Done!")
