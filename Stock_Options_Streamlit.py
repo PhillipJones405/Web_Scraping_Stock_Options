@@ -52,7 +52,7 @@ def options_chain(symbol):
     # Add 1 day to get the correct expiration date
     options['expirationDate'] = pd.to_datetime(options['expirationDate']) + datetime.timedelta(days=1)
     options['dte'] = (options['expirationDate'] - datetime.datetime.today()).dt.days / 365
-
+    options['Ticker'] = i
     # Boolean column if the option is a CALL
     options['CALL'] = options['contractSymbol'].str[4:].apply(
         lambda x: "C" in x)
