@@ -16,24 +16,39 @@ import io
 # Create a text element and let the reader know the data is loading.
 data_load_state = st.text('Loading data...')
 
-
+#get all the dates we will need
 today = datetime.date.today()
 start_time = datetime.datetime.now()
 rd = REL.relativedelta(days = 1, weekday = REL.FR)
 next_friday = today + rd + datetime.timedelta(days=1)
+prev_friday = next_friday - datetime.timedelta(days=7)
+
+#make another prev_friday and monday variable for yf.download
+#for some reason it treats dates differently than the options function
+#date for monday is actually tuesday's date
+prev_friday1 = next_friday - datetime.timedelta(days=8)
+monday = prev_friday1 + datetime.timedelta(days=4)
 next_friday = next_friday.strftime("%Y-%m-%d %H:%M:%S")
 path = os.getcwd()
 pd.set_option("display.max_columns", 15)
 next_friday1 = today + rd + datetime.timedelta(days=0)
 next_friday1 = str(next_friday1)
+
+print("Next Friday:")
 print(next_friday)
 print(next_friday1)
+print("Previous Friday")
+print(prev_friday)
+print("prev friday1, monday")
+print(prev_friday1)
+print(monday)
 
 # Modified Lian's function.  Only pulling 1st expiration date (the only thing we care about)
 # reduced run time from 14 minutes to about 40 second on 100 tickers.
 #used this code from Tony Lian for pulling options table into python
 #uses yfinance library: https://pypi.org/project/yfinance/
 #https://medium.com/@txlian13/webscrapping-options-data-with-python-and-yfinance-e4deb0124613
+@st.cache
 def options_chain(symbol):
     tk = yf.Ticker(symbol)
     # Expiration dates
@@ -59,7 +74,14 @@ def options_chain(symbol):
 
     options[['bid', 'ask', 'strike']] = options[['bid', 'ask', 'strike']].apply(pd.to_numeric)
     options['mark'] = (options['bid'] + options['ask']) / 2  # Calculate the midpoint of the bid-ask
-
+    
+    #grab last friday close, this monday open
+    data = yf.download(tickers=symbol, start=prev_friday1,end=monday)
+    
+    options['close_friday'] = data['Close'][0]
+    options['open_today'] = data['Open'][-1]
+    options['percent change from Friday to Monday'] = ((options['open_today'] - options['close_friday'])/options['open_today'])*100
+    print(data)
     # Drop unnecessary and meaningless columns
     options = options.drop(
         columns=['contractSize', 'currency', 'change', 'percentChange', 'lastTradeDate', 'lastPrice'])
@@ -183,6 +205,7 @@ for i in stock_list:
     expirationDate = all['expirationDate'][0]
     all = all.loc[all['expirationDate'] == next_friday]
     puts = all.loc[all['CALL'] == False]
+
     calls = all.loc[all['CALL'] == True]
     if puts.shape[0] < 8:
         put = puts.iloc[(puts.shape[0] - 1):(puts.shape[0])]
@@ -192,6 +215,9 @@ for i in stock_list:
         call = calls.iloc[6:7]
     options_list1 = pd.concat([put, call], ignore_index=False)
     all_calls_puts.append(options_list1)
+    
+
+
     print(i)
     print(expirationDate)
     print("# of puts: ",puts.shape[0])
@@ -207,6 +233,23 @@ save_name = "options_list_expiring_" + next_friday1 + ".xlsx"
 
 # Notify the reader that the data was successfully loaded.
 data_load_state.text("Done!")
+
+#top level filter for tickers
+
+# ticker_filter = st.multiselect('Select the ticker(s): ', options_list['Ticker'], default=options_list['Ticker'])
+# #ticker_filter = pd.unique(options_list['Ticker'])
+# #filtering
+
+# options_list = options_list[options_list['Ticker'] == ticker_filter]
+
+#add radio buttons for calls, puts, all
+radio = st.radio('select all, calls, puts: ', ['All','Calls','Puts'], index=0)
+if radio != 'All':
+    if radio == 'Calls':
+        choice = True
+    else:
+        choice = False
+    options_list = options_list[options_list['CALL'] == choice]
 
 
 st.subheader('Stock Options Expiring: ', next_friday1)
@@ -228,3 +271,8 @@ with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
         file_name=save_name,
         mime="application/vnd.ms-excel"
     )
+
+print("prev friday1, monday")
+print(prev_friday1)
+print(monday)
+print(options_list.dtypes)
