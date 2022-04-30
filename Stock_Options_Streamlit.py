@@ -77,7 +77,7 @@ def options_chain(symbol):
     
     #grab last friday close, this monday open
     data = yf.download(tickers=symbol, start=prev_friday1,end=monday)
-    
+
     options['close_friday'] = data['Close'][0]
     options['open_today'] = data['Open'][-1]
     options['percent change from Friday to Monday'] = ((options['open_today'] - options['close_friday'])/options['open_today'])*100
@@ -252,7 +252,7 @@ if radio != 'All':
     options_list = options_list[options_list['CALL'] == choice]
 
 
-st.subheader('Stock Options Expiring: ', next_friday1)
+st.subheader('Stock Options Expiring Next Friday ')
 st.write(options_list)
 
 buffer = io.BytesIO()
