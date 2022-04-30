@@ -234,20 +234,20 @@ save_name = "options_list_expiring_" + next_friday1 + ".xlsx"
 # Notify the reader that the data was successfully loaded.
 data_load_state.text("Done!")
 
-
+#add radio buttons for calls, puts, all
+# radio = st.radio('select all, calls, puts: ', ['All','Calls','Puts'], index=0)
+# if radio != 'All':
+#     if radio == 'Calls':
+#         choice = True
+#     else:
+#         choice = False
+#     options_list = options_list[options_list['CALL'] == choice]
 
 
 st.subheader('Stock Options Expiring Next Friday ')
 st.write(options_list)
 
-#add radio buttons for calls, puts, all
-radio = st.radio('select all, calls, puts: ', ['All','Calls','Puts'], index=0)
-if radio != 'All':
-    if radio == 'Calls':
-        choice = True
-    else:
-        choice = False
-    options_list = options_list[options_list['CALL'] == choice]
+
 
 buffer = io.BytesIO()
 
